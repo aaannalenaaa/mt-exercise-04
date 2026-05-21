@@ -3,39 +3,45 @@
 scripts=$(dirname "$0")
 base=$scripts/..
 
-data=$base/sampled_data
+data=$base/data
 configs=$base/configs
 
 translations=$base/translations
 
 mkdir -p $translations
 
-src=?
-trg=?
+src=it
+trg=en
 
 
-num_threads=4
 device=0
 
 # measure time
 
 SECONDS=0
 
-model_name=?
 
-echo "###############################################################################"
-echo "model_name $model_name"
+for model_name in transformer_word transformer_bpe_2k transformer_bpe_4k; do
+    echo "========================================="
+    echo "model_name: $model_name"
+    echo "========================================="
+    
 
-translations_sub=$translations/$model_name
+    translations_sub=$translations/$model_name
 
-mkdir -p $translations_sub
+    mkdir -p $translations_sub
 
-CUDA_VISIBLE_DEVICES=$device OMP_NUM_THREADS=$num_threads python -m joeynmt translate $configs/$model_name.yaml < $data/test.$src > $translations_sub/test.$model_name.$trg
+    PYTORCH_ENABLE_MPS_FALLBACK=1 OMP_NUM_THREADS=8 python -m joeynmt \
+    translate $configs/$model_name.yaml < $data/test.$src > \
+    $translations_sub/test.$model_name.$trg
 
-# compute case-sensitive BLEU 
+    # compute case-sensitive BLEU 
 
-cat $translations_sub/test.$model_name.$trg | sacrebleu $data/test.$trg
+    cat $translations_sub/test.$model_name.$trg | sacrebleu $data/test.$trg
 
+    echo "$model_name done in $SECONDS seconds"
 
-echo "time taken:"
-echo "$SECONDS seconds"
+    
+done
+
+echo "All models evaluated."

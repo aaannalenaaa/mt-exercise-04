@@ -1,28 +1,21 @@
 #! /bin/bash
-
 scripts=$(dirname "$0")
 base=$scripts/..
 
-models=$base/models
-configs=$base/configs
+for model_name in transformer_word transformer_bpe_2k transformer_bpe_4k; do
+    echo "========================================="
+    echo "Starting training: $model_name"
+    echo "========================================="
+    
+    mkdir -p $base/logs/$model_name
+    
+    SECONDS=0
+    PYTORCH_ENABLE_MPS_FALLBACK=1 OMP_NUM_THREADS=8 python -m joeynmt train \
+        $base/configs/$model_name.yaml \
+        > $base/logs/$model_name/out \
+        2> $base/logs/$model_name/err
+    
+    echo "$model_name done in $SECONDS seconds"
+done
 
-mkdir -p $models
-
-num_threads=4
-
-# measure time
-
-SECONDS=0
-
-logs=$base/logs
-
-model_name=?
-
-mkdir -p $logs
-
-mkdir -p $logs/$model_name
-
-OMP_NUM_THREADS=$num_threads python -m joeynmt train $configs/$model_name.yaml > $logs/$model_name/out 2> $logs/$model_name/err
-
-echo "time taken:"
-echo "$SECONDS seconds"
+echo "All models trained."

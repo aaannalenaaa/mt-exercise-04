@@ -16,19 +16,21 @@ This repository is a starting point for the 4th and final exercise. As before, f
 
 ## For macOS
 
-Clone your fork of the repository + Create a virtual environment:
-   ```
-   git clone https://github.com/[your-username]/mt-exercise-4
-   cd mt-exercise-4 
+**Clone your fork of the repository:**
 
-   ```
-    ./scripts/make_virtualenv.sh
+       git clone https://github.com/[your-username]/mt-exercise-4
+       cd mt-exercise-4 
+
+
+**Create a virtual environment:**
+
+       ./scripts/make_virtualenv.sh
 
 Important: Activate the env by executing the source command that is output by the shell script above.
 Install required dependencies.
 Note: Make sure to make all scripts executable if they are not.
 
-Download data:
+**Download data:**
 
        python ./scripts/download_huggingface_data.py --src it --trg en --out data
 
@@ -68,7 +70,7 @@ This script can be used to test a selected model for selected beam sizes.
 | ✓      | 2000           | 21.3 |
 | ✓      | 4000           | 21.9 |
 
-Manual inspection of the translations reveals substantial differences both across vocabulary sizes and between the use of BPE coding and no coding. In the accompanying PDF report 7 example sentences are presented, selected from the test output. It is evident that the non-BPE-coded sentences do not produce adequate translations: they are frequently difficult to understand, and in sentence 6 the output lacks linguistic content entirely. Sentence 7 is missing a key word that determines the meaning.
+Manual inspection of the translations reveals substantial differences both across vocabulary sizes and between the use of BPE coding and no coding. In [the accompanying PDF](a_alber_mt_exercise-4) report 7 example sentences are presented, selected from the test output. It is evident that the non-BPE-coded sentences do not produce adequate translations: they are frequently difficult to understand, and in sentence 6 the output lacks linguistic content entirely. Sentence 7 is missing a key word that determines the meaning.
 
 Comparing the 2,000 and 4,000 vocabulary conditions, results partially overlap (e.g., sentence 7), but the larger vocabulary does not consistently improve translation quality. The BLEU scores confirm this: increasing vocabulary size alone does not reliably improve performance under this setup.
 

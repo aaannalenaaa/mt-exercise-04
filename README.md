@@ -12,14 +12,9 @@ This repository is a starting point for the 4th and final exercise. As before, f
   ```bash
   pip install virtualenv
 
-macOS/Linux users: No special setup needed; shell scripts should run normally.
-
-Windows users: Either use Windows Subsystem for Linux (WSL) or a Unix-compatible shell like Git Bash.
-If you're using PowerShell or Command Prompt, manual setup is required.
-
 ### Setup Instructions
 
-## For macOS / Linux / WSL / Git Bash users
+## For macOS
 
 Clone your fork of the repository + Create a virtual environment:
    ```
@@ -29,53 +24,64 @@ Clone your fork of the repository + Create a virtual environment:
    ```
     ./scripts/make_virtualenv.sh
 
-Important: Then activate the env by executing the source command that is output by the shell script above.
-
-Install required dependencies - Follow the instructions provided in the exercise PDF.
+Important: Activate the env by executing the source command that is output by the shell script above.
+Install required dependencies.
+Note: Make sure to make all scripts executable if they are not.
 
 Download data:
 
-       python ./scripts/download_huggingface_data.py --src en --trg nl --out data
+       python ./scripts/download_huggingface_data.py --src it --trg en --out data
 
-You can choose any supported direction except `de-en`. Good options are `en-nl`, `en-it`, `en-ro`, `nl-en`, `it-en`, or `ro-en`.
+**Preprocess the data:**
 
+       .scripts/preprocess.sh
 
-Train the model:
+This script can be used to preprocess the data, namely to learn a joint BPE model and build the joint vocabulary files for vocabulary sizes 2000 and 4000.
+
+**Train all three models:**
 
        ./scripts/train.sh
 
-*the training process can be interrupted at any time. The best checkpoint will always be saved automatically.
+This script can be used to train all models in sequence.
 
-Evaluate the model:
+**Evaluate all three models:**
 
        ./scripts/evaluate.sh
 
-## For Windows (Command Prompt / PowerShell users)
-Manually create and activate a virtual environment:
+This script can be used to evaluate all models in sequence.
 
-        python -m venv mt_env
-        mt_env\Scripts\activate
+**Run the beam code:**
 
-Note: The make_virtualenv.sh script will not work in native Windows shells.
+       ./script/beam.sh
 
-Manually download the dataset
+This script can be used to test a selected model for selected beam sizes. 
 
-Use the Python downloader script directly, for example:
+## Results
 
-       python scripts/download_huggingface_data.py --src en --trg nl --out data
+### Experiments with Byte Pair Encoding
 
-If you want a different language pair, replace `--src` and `--trg` with one of the supported directions listed above.
+**Translation direction:** Italian → English
 
-Modify, train, and evaluate
-Once setup is complete, use the instructions in the exercise PDF to run training and evaluation (either by adapting the .sh scripts manually, or by using Git Bash/WSL).
+| use BPE | vocabulary size | BLEU |
+|--------|----------------|------|
+| ✗      | 2000           | 8.4  |
+| ✓      | 2000           | 21.3 |
+| ✓      | 4000           | 21.9 |
 
-#### Notes for Windows Users
+Manual inspection of the translations reveals substantial differences both across vocabulary sizes and between the use of BPE coding and no coding. In the accompanying PDF report 7 example sentences are presented, selected from the test output. It is evident that the non-BPE-coded sentences do not produce adequate translations: they are frequently difficult to understand, and in sentence 6 the output lacks linguistic content entirely. Sentence 7 is missing a key word that determines the meaning.
 
-  Using Git Bash or WSL is highly recommended for compatibility.
+Comparing the 2,000 and 4,000 vocabulary conditions, results partially overlap (e.g., sentence 7), but the larger vocabulary does not consistently improve translation quality. The BLEU scores confirm this: increasing vocabulary size alone does not reliably improve performance under this setup.
 
-  If using native PowerShell or Command Prompt:
+---
 
-  Manual recreation of shell script steps will be necessary.
+### Beam Search
 
-  Always activate your virtual environment before running any training or evaluation steps.
+| Beam size | 1 | 2 | **4** | 5 | 6 | 7 | 8 | 10 | 12 | 20 |
+|----------|---|---|---|---|---|----|----|----|---|
+| BLEU     | 19.7 | 21.4 | 21.9 | 21.9 | 21.8 | 21.8 | 21.8 | 21.8 | 21.7 | 21.4 |
+| time (s) | 40 | 22 | 62 | 85 | 106 | 139 | 169 | **340** |
 
+
+Beam size does not monotonically improve BLEU. The best score (21.9) is reached at beam size 5, after which performance plateaus and slightly degrades. Runtime increases with beam size in an approximately linear fashion, with a strong cost increase at larger beams (notably beam size 20).
+
+Beam size 5 provides the best accuracy–runtime trade-off in this setup.

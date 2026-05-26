@@ -19,7 +19,7 @@ output_csv=$results/beam_results.csv
 
 echo "beam,bleu,time_seconds" > $output_csv
 
-for beam_size in 1 2 5 7 8 10 12 20; do
+for beam_size in 1 2 4 5 6 7 8 10 12 20; do
     echo "========================================="
     echo "Beam size: $beam_size"
     echo "========================================="

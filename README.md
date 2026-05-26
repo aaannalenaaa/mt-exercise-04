@@ -77,11 +77,16 @@ Comparing the 2,000 and 4,000 vocabulary conditions, results partially overlap (
 ### Beam Search
 
 | Beam size | 1 | 2 | **4** | 5 | 6 | 7 | 8 | 10 | 12 | 20 |
-|----------|---|---|---|---|---|----|----|----|---|
+|----------|---|---|---|---|---|----|----|----|----|
 | BLEU     | 19.7 | 21.4 | 21.9 | 21.9 | 21.8 | 21.8 | 21.8 | 21.8 | 21.7 | 21.4 |
-| time (s) | 40 | 22 | 62 | 85 | 106 | 139 | 169 | **340** |
+| time (s) | 39 | 23 | 47 | 63 | 68 | 85 | 103 | 148 | 167 | **340** |
+
+
+
 
 
 Beam size does not monotonically improve BLEU. The best score (21.9) is reached at beam size 5, after which performance plateaus and slightly degrades. Runtime increases with beam size in an approximately linear fashion, with a strong cost increase at larger beams (notably beam size 20).
 
 Beam size 5 provides the best accuracy–runtime trade-off in this setup.
+
+![Line plot of BLEU Score and Time vs Beam Size](results/beam_results_plot.png)

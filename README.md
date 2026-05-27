@@ -6,15 +6,10 @@ This repository is a starting point for the 4th and final exercise. As before, f
 
 ## Requirements
 
-- Python 3.10 must be installed. The command `python3` (or `python` on Windows) should be available from your terminal or command prompt.
-- `virtualenv` must be installed. Install it with:
-
-  ```bash
-  pip install virtualenv
+- Python 3.10 must be installed.
+- `virtualenv` must be installed.
 
 ### Setup Instructions
-
-## For macOS
 
 **Clone your fork of the repository:**
 

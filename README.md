@@ -96,4 +96,4 @@ Beam size 5 provides the best accuracy–runtime trade-off in this setup.
 
 #### Some more plots (click to open):
 - [Bubble Plot](https://aaannalenaaa.github.io/mt-exercise-04/results/beam_bleu_time_bubble.html)
-- [Line Plot](https://aaannalenaaa.github.io/mt-exercise-04/results/beam_bleu_time.html)
+- [Line Plot](https://aaannalenaaa.github.io/mt-exercise-04/results/beam_time_bleu.html)

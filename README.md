@@ -58,6 +58,24 @@ This script can be used to evaluate all models in sequence.
 
 This script can be used to test a selected model for selected beam sizes. 
 
+
+### Changes in the .yaml files
+
+Added this at the end of the src and trg data entries for word segmentation:
+
+        # either use a vocabulary limit:
+        voc_limit: 2000
+
+and added this for the bpe models, with the respective vocab files selected:
+
+        # a file with a vocabulary built before starting the training:
+        voc_file : "data/vocab_2k.joint"
+        tokenizer_type: "subword-nmt"
+        tokenizer_cfg:
+            codes: "data/bpe_2k.codes"
+
+The level is changed accordingly.
+
 ## Results
 
 ### Experiments with Byte Pair Encoding
